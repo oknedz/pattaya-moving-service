@@ -1,0 +1,33 @@
+{
+  "Metadata": {
+    "title": "Pattaya Moving Service - Professional & Reliable",
+    "description": "Expert moving services in Pattaya, Thailand. Local and long-distance moves with a fleet of modern vehicles. Get a quote today!"
+  },
+  "Navigation": {
+    "home": "Home",
+    "services": "Services",
+    "contact": "Contact",
+    "getQuote": "Get a Quote"
+  },
+  "Hero": {
+    "title": "Move with Confidence in Pattaya",
+    "subtitle": "Professional moving services for homes and businesses. Secure, reliable, and efficient.",
+    "cta": "Get a Free Quote"
+  },
+  "QuoteForm": {
+    "title": "Get a Free Quote",
+    "origin": "Origin Location",
+    "destination": "Destination Location",
+    "name": "Full Name",
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "comments": "Additional Comments",
+    "submit": "Request Quote",
+    "success": "Quote requested successfully! We will contact you shortly."
+  },
+  "MobileSticky": {
+    "call": "Call",
+    "line": "Line",
+    "quote": "Quote"
+  }
+}
