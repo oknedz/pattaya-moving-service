@@ -142,7 +142,6 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
                                             <AddressAutocomplete
                                                 label={t('origin')}
                                                 name="origin"
-                                                value=""
                                                 onChange={(e) => handleChange(e as any)}
                                                 onBlur={handleBlur}
                                                 placeholder={t('origin')}
@@ -154,7 +153,6 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
                                             <AddressAutocomplete
                                                 label={t('destination')}
                                                 name="destination"
-                                                value=""
                                                 onChange={(e) => handleChange(e as any)}
                                                 onBlur={handleBlur}
                                                 placeholder={t('destination')}

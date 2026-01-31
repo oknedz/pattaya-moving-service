@@ -8,7 +8,7 @@ import { MapPin } from "lucide-react";
 interface AddressAutocompleteProps {
     label: string;
     name: string;
-    value: string;
+    value?: string;
     onChange: (e: { target: { name: string; value: string } }) => void; // Mimic event for easier integration
     onBlur: (e: any) => void;
     error?: string;
@@ -37,15 +37,15 @@ export default function AddressAutocomplete({
             componentRestrictions: { country: "th" },
         },
         debounce: 300,
-        defaultValue: value,
+        defaultValue: value || "", // Use empty string if undefined
     });
 
-    // Update internal state when external value changes (e.g. form reset)
+    // Update internal state when external value changes (only if value is provided)
     useEffect(() => {
-        if (value !== inputValue) {
+        if (value !== undefined && value !== inputValue) {
             setServiceValue(value);
         }
-    }, [value, setServiceValue]);
+    }, [value, setServiceValue, inputValue]);
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setServiceValue(e.target.value);
@@ -76,8 +76,8 @@ export default function AddressAutocomplete({
                     autoComplete="off"
                     placeholder={placeholder}
                     className={`w-full px-4 py-2 rounded-lg border ${error && touched
-                            ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100'
-                            : 'border-slate-200 focus:border-[#E7294E] focus:ring-2 focus:ring-pink-200'
+                        ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100'
+                        : 'border-slate-200 focus:border-[#E7294E] focus:ring-2 focus:ring-pink-200'
                         } outline-none transition-all disabled:bg-slate-50 disabled:text-slate-400`}
                 />
                 {!ready && (
