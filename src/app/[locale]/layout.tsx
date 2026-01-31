@@ -1,5 +1,4 @@
 import { NextIntlClientProvider } from 'next-intl';
-import Script from 'next/script';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
@@ -60,12 +59,6 @@ export default async function LocaleLayout({
 
     return (
         <html lang={locale}>
-            <head>
-                <Script
-                    src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
-                    strategy="lazyOnload"
-                />
-            </head>
             <body className={`${kanit.variable} ${sarabun.variable} font-body antialiased`}>
                 <NextIntlClientProvider messages={messages}>
                     <QuoteProvider>
