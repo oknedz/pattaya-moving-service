@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
+import AddressAutocomplete from './AddressAutocomplete';
 
 interface QuoteModalProps {
     isOpen: boolean;
@@ -13,17 +14,75 @@ interface QuoteModalProps {
 export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
     const t = useTranslations('QuoteForm');
     const [submitted, setSubmitted] = useState(false);
+    const [errors, setErrors] = useState<Record<string, string>>({});
+    const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const validateField = (name: string, value: string) => {
+        switch (name) {
+            case 'origin':
+                return value.trim() ? '' : t('originRequired') || 'Origin location is required';
+            case 'destination':
+                return value.trim() ? '' : t('destinationRequired') || 'Destination location is required';
+            case 'name':
+                return value.trim() ? '' : t('nameRequired') || 'Name is required';
+            case 'email':
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!value.trim()) return t('emailRequired') || 'Email is required';
+                if (!emailRegex.test(value)) return t('emailInvalid') || 'Please enter a valid email';
+                return '';
+            case 'phone':
+                if (!value.trim()) return t('phoneRequired') || 'Phone number is required';
+                return '';
+            default:
+                return '';
+        }
+    };
+
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setTouched({ ...touched, [name]: true });
+        const error = validateField(name, value);
+        setErrors({ ...errors, [name]: error });
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        if (touched[name]) {
+            const error = validateField(name, value);
+            setErrors({ ...errors, [name]: error });
+        }
+    };
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // Simulate API call
-        setTimeout(() => {
-            setSubmitted(true);
+        const formData = new FormData(e.currentTarget);
+        const newErrors: Record<string, string> = {};
+        const newTouched: Record<string, boolean> = {};
+
+        // Validate all fields
+        ['origin', 'destination', 'name', 'email', 'phone'].forEach(field => {
+            const value = formData.get(field) as string;
+            newTouched[field] = true;
+            const error = validateField(field, value);
+            if (error) newErrors[field] = error;
+        });
+
+        setTouched(newTouched);
+        setErrors(newErrors);
+
+        // If no errors, submit
+        if (Object.keys(newErrors).length === 0) {
+            // Simulate API call
             setTimeout(() => {
-                onClose();
-                setSubmitted(false);
-            }, 3000);
-        }, 1000);
+                setSubmitted(true);
+                setErrors({});
+                setTouched({});
+                setTimeout(() => {
+                    onClose();
+                    setSubmitted(false);
+                }, 3000);
+            }, 1000);
+        }
     };
 
     return (
@@ -77,26 +136,30 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
                                 <h2 className="text-2xl font-bold text-slate-800 mb-6 text-center">
                                     {t('title')}
                                 </h2>
-                                <form onSubmit={handleSubmit} className="space-y-4">
+                                <form onSubmit={handleSubmit} noValidate className="space-y-4">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-sm font-medium text-slate-700 mb-1">
-                                                {t('origin')}
-                                            </label>
-                                            <input
-                                                required
-                                                type="text"
-                                                className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
+                                            <AddressAutocomplete
+                                                label={t('origin')}
+                                                name="origin"
+                                                value=""
+                                                onChange={(e) => handleChange(e as any)}
+                                                onBlur={handleBlur}
+                                                placeholder={t('origin')}
+                                                error={errors.origin}
+                                                touched={touched.origin}
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium text-slate-700 mb-1">
-                                                {t('destination')}
-                                            </label>
-                                            <input
-                                                required
-                                                type="text"
-                                                className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
+                                            <AddressAutocomplete
+                                                label={t('destination')}
+                                                name="destination"
+                                                value=""
+                                                onChange={(e) => handleChange(e as any)}
+                                                onBlur={handleBlur}
+                                                placeholder={t('destination')}
+                                                error={errors.destination}
+                                                touched={touched.destination}
                                             />
                                         </div>
                                     </div>
@@ -106,10 +169,21 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
                                             {t('name')}
                                         </label>
                                         <input
-                                            required
+                                            name="name"
                                             type="text"
-                                            className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
+                                            onBlur={handleBlur}
+                                            onChange={handleChange}
+                                            className={`w-full px-4 py-2 rounded-lg border ${errors.name && touched.name
+                                                ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100'
+                                                : 'border-slate-200 focus:border-[#E7294E] focus:ring-2 focus:ring-pink-200'
+                                                } outline-none transition-all`}
                                         />
+                                        {errors.name && touched.name && (
+                                            <p className="mt-1 text-xs text-red-600 flex items-center gap-1">
+                                                <span className="inline-block w-1 h-1 bg-red-600 rounded-full"></span>
+                                                {errors.name}
+                                            </p>
+                                        )}
                                     </div>
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -118,20 +192,42 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
                                                 {t('email')}
                                             </label>
                                             <input
-                                                required
+                                                name="email"
                                                 type="email"
-                                                className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
+                                                onBlur={handleBlur}
+                                                onChange={handleChange}
+                                                className={`w-full px-4 py-2 rounded-lg border ${errors.email && touched.email
+                                                    ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100'
+                                                    : 'border-slate-200 focus:border-[#E7294E] focus:ring-2 focus:ring-pink-200'
+                                                    } outline-none transition-all`}
                                             />
+                                            {errors.email && touched.email && (
+                                                <p className="mt-1 text-xs text-red-600 flex items-center gap-1">
+                                                    <span className="inline-block w-1 h-1 bg-red-600 rounded-full"></span>
+                                                    {errors.email}
+                                                </p>
+                                            )}
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-slate-700 mb-1">
                                                 {t('phone')}
                                             </label>
                                             <input
-                                                required
+                                                name="phone"
                                                 type="tel"
-                                                className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all"
+                                                onBlur={handleBlur}
+                                                onChange={handleChange}
+                                                className={`w-full px-4 py-2 rounded-lg border ${errors.phone && touched.phone
+                                                    ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100'
+                                                    : 'border-slate-200 focus:border-[#E7294E] focus:ring-2 focus:ring-pink-200'
+                                                    } outline-none transition-all`}
                                             />
+                                            {errors.phone && touched.phone && (
+                                                <p className="mt-1 text-xs text-red-600 flex items-center gap-1">
+                                                    <span className="inline-block w-1 h-1 bg-red-600 rounded-full"></span>
+                                                    {errors.phone}
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
 
@@ -140,14 +236,15 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
                                             {t('comments')}
                                         </label>
                                         <textarea
+                                            name="comments"
                                             rows={3}
-                                            className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all resize-none"
+                                            className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-[#E7294E] focus:ring-2 focus:ring-pink-200 outline-none transition-all resize-none"
                                         ></textarea>
                                     </div>
 
                                     <button
                                         type="submit"
-                                        className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-orange-500/20 active:scale-[0.98] transition-all bg-gradient-to-r from-orange-500 to-orange-600"
+                                        className="w-full bg-[#E7294E] hover:bg-[#C91D3E] text-white font-bold py-3 rounded-xl shadow-lg shadow-[#E7294E]/20 active:scale-[0.98] transition-all bg-gradient-to-r from-[#E7294E] to-[#C91D3E]"
                                     >
                                         {t('submit')}
                                     </button>

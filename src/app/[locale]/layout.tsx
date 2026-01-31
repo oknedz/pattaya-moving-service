@@ -1,18 +1,28 @@
 import { NextIntlClientProvider } from 'next-intl';
+import Script from 'next/script';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import Navbar from '@/components/Navbar';
 import MobileStickyBar from '@/components/MobileStickyBar';
+import Footer from '@/components/Footer';
 import { QuoteProvider } from '@/context/QuoteContext';
 import "@/app/globals.css";
-import { Outfit } from 'next/font/google';
+import { Kanit, Sarabun } from 'next/font/google';
 
 // Font configuration
-const outfit = Outfit({
-    subsets: ['latin'],
+const kanit = Kanit({
+    weight: ['300', '400', '500', '600', '700'],
+    subsets: ['latin', 'thai'],
+    variable: '--font-heading',
     display: 'swap',
-    variable: '--font-outfit',
+});
+
+const sarabun = Sarabun({
+    weight: ['300', '400', '500', '600', '700'],
+    subsets: ['latin', 'thai'],
+    variable: '--font-body',
+    display: 'swap',
 });
 
 // Metadata generation
@@ -50,15 +60,21 @@ export default async function LocaleLayout({
 
     return (
         <html lang={locale}>
-            <body className={outfit.className}>
+            <head>
+                <Script
+                    src={`https://maps.googleapis.com/maps/api/js?key=AIzaSyAnyP3f1DzVBwKRXvU2T-793veDWsbDidc&libraries=places`}
+                    strategy="lazyOnload"
+                />
+            </head>
+            <body className={`${kanit.variable} ${sarabun.variable} font-body antialiased`}>
                 <NextIntlClientProvider messages={messages}>
                     <QuoteProvider>
                         <div className="flex flex-col min-h-screen">
                             <Navbar />
-                            <main className="flex-grow pb-20 md:pb-0 pt-20">
+                            <main className="flex-grow pb-20 md:pb-0">
                                 {children}
                             </main>
-                            {/* Footer would go here */}
+                            <Footer />
                             <MobileStickyBar />
                         </div>
                     </QuoteProvider>

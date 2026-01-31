@@ -10,9 +10,39 @@
     "getQuote": "Get a Quote"
   },
   "Hero": {
-    "title": "Move with Confidence in Pattaya",
-    "subtitle": "Professional moving services for homes and businesses. Secure, reliable, and efficient.",
-    "cta": "Get a Free Quote"
+    "title": "<light>pattaya</light><br></br>Moving Service",
+    "subtitle": "SAFE. FAST. AFFORDABLE.",
+    "cta": "Get a Free Quote",
+    "cards": {
+      "business": {
+        "title": "Business",
+        "description": "Office relocations and commercial moving solutions for companies of all sizes.",
+        "link": "Find out more"
+      },
+      "personal": {
+        "title": "Personal",
+        "description": "House, condo, and apartment moving services tailored to your needs.",
+        "link": "Find out more"
+      }
+    }
+  },
+  "Features": {
+    "subtitle": "24/7. Fast. Affordable.",
+    "title": "24/7. Fast. Affordable.",
+    "items": {
+      "affordable": {
+        "title": "Affordable",
+        "description": "Transparent pricing with no hidden costs."
+      },
+      "fast": {
+        "title": "24/7 service",
+        "description": "A wide variety of vehicles available for your moving needs at any time of the day."
+      },
+      "safe": {
+        "title": "Safe delivery",
+        "description": "Professional movers ensure all your belongings safely reach their destination."
+      }
+    }
   },
   "QuoteForm": {
     "title": "Get a Free Quote",
@@ -23,11 +53,54 @@
     "phone": "Phone Number",
     "comments": "Additional Comments",
     "submit": "Request Quote",
-    "success": "Quote requested successfully! We will contact you shortly."
+    "success": "Quote requested successfully! We will contact you shortly.",
+    "originRequired": "Origin location is required",
+    "destinationRequired": "Destination location is required",
+    "nameRequired": "Name is required",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Please enter a valid email address",
+    "phoneRequired": "Phone number is required"
+  },
+  "Services": {
+    "title": "Our Professional Services",
+    "subtitle": "Comprehensive moving solutions tailored to your needs.",
+    "items": {
+      "local": {
+        "title": "Local Moving",
+        "description": "Efficient local moving services within Pattaya and nearby areas."
+      },
+      "long_distance": {
+        "title": "Long Distance",
+        "description": "Safe and reliable transportation to anywhere in Thailand."
+      },
+      "office": {
+        "title": "Office Relocation",
+        "description": "Minimize downtime with our expert business moving services."
+      },
+      "packing": {
+        "title": "Packing Services",
+        "description": "Professional packing to ensure your belongings arrive safely."
+      }
+    }
   },
   "MobileSticky": {
     "call": "Call",
     "line": "Line",
     "quote": "Quote"
+  },
+  "Footer": {
+    "company": "Company",
+    "about": "About Us",
+    "services": "Services",
+    "localMoving": "Local Moving",
+    "longDistance": "Long Distance",
+    "officeRelocation": "Office Relocation",
+    "packingServices": "Packing Services",
+    "contact": "Contact Us",
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address",
+    "addressText": "Pattaya, Chonburi, Thailand",
+    "copyright": "© 2026 Pattaya Movers. All rights reserved."
   }
 }
